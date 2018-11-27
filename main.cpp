@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <numeric>
 #include <cmath>
+#include <set>
+#include <unordered_set>
 
 template <typename T>
 class Q;
@@ -179,6 +181,46 @@ std::string pigIt(const std::string &str) {
     return ss_out.str();
 }
 
+std::unordered_set<std::string> generate(char ch, const std::string &in) {
+    std::unordered_set<std::string> acc{};
+    acc.insert(std::string{ch} + in);
+    for (auto it = in.begin(); it != in.end() ; ++it)
+        acc.insert(
+                std::string(in.cbegin(), it) +
+                std::string{ch} + std::string(it, in.cend())
+        );
+    acc.insert(in + std::string{ch});
+    return std::move(acc);
+}
+
+std::vector<std::string> permutations2(std::string s)
+{
+    std::sort(s.begin(), s.end());
+    std::vector<std::string> result;
+    do
+    {
+        result.push_back(s);
+    }
+    while (std::next_permutation(s.begin(), s.end()));
+    return result;
+}
+
+std::vector<std::string> permutations(std::string s) {
+    if (s.empty()) return {""};
+    using set = std::unordered_set<std::string>;
+    set d{std::string{s[0]}};
+
+    for (auto ch = s.cbegin() + 1; ch != s.cend(); ++ch) {
+        std::vector<set> vs{};
+        for(const auto &item: d)
+            vs.push_back(generate(*ch, item));
+        d.clear();
+        for(auto item: vs)
+            d.insert(item.begin(), item.end());
+    }
+    return std::vector<std::string>(d.begin(), d.end());
+}
+
 int main() {
     int x = duplicateCount("aabbcde");
 
@@ -197,6 +239,10 @@ int main() {
     auto d4 = pigIt("Pig latin is cool"); // igPay atinlay siay oolcay
     d4 = pigIt("Hello, world  !\t\n");     // elloHay orldway !
     d4  = pigIt2("Hello world  !\t\n");
+
+    auto d5 = permutations("");
+
+
 
     valid_braces("[({})](]");
 
