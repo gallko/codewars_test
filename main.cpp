@@ -136,6 +136,49 @@ bool valid_braces(std::string braces)
     return acc.empty();
 }
 
+long zeros(long n) {
+    long long acc = 0, tmp = 0;
+
+    for(long long i = 1; n > tmp; ++i) {
+        tmp = static_cast<long long>(pow(5, i));
+        acc += n / tmp;
+    }
+
+    return acc;
+}
+
+bool isPrime(int num) {
+    printf("~d~n", num);
+    if (num <= 0) return false;
+    if (num == 1) return false;
+    for (int i = 2; i <= sqrt(num); ++i) {
+        if (!(num % i)) return false;
+    }
+    return true;
+}
+
+std::string pigIt2(const std::string &str) {
+    std::regex reg{"(\\w)(\\w*)(\\s|$)"};
+    return regex_replace(str, reg, "$2$1ay$3");
+}
+std::string pigIt(const std::string &str) {
+    std::ostringstream ss_out;
+    std::string out;
+    std::cout << str << std::endl;
+    char first = 0x00;
+    for(auto it = str.begin(); it <= str.end(); ++it) {
+        if(isalpha(*it)) {
+            if (!first) first = *it;
+            else ss_out << *it;
+            continue;
+        }
+        if (first) ss_out << first << "ay";
+        if (it != str.end()) ss_out << *it;
+        first = 0x00;
+    }
+    return ss_out.str();
+}
+
 int main() {
     int x = duplicateCount("aabbcde");
 
@@ -145,6 +188,15 @@ int main() {
 
     auto d1 = revrot("73304991087281576455176044327690580265896", 8);
                                                                          // 1994033775182780067155464327690480265895
+
+    auto d2 = zeros(1000);
+
+    auto d3 = isPrime(-10);
+
+
+    auto d4 = pigIt("Pig latin is cool"); // igPay atinlay siay oolcay
+    d4 = pigIt("Hello, world  !\t\n");     // elloHay orldway !
+    d4  = pigIt2("Hello world  !\t\n");
 
     valid_braces("[({})](]");
 
