@@ -12,20 +12,20 @@
 template <typename T>
 class Q;
 
-template <typename T, typename = std::enable_if_t <
-        !std::is_same<
-                typename std::iterator_traits<typename T::const_iterator>::value_type,
-                void>::value
-    &&
-        !std::is_base_of<std::string, std::decay_t<T>>::value
-    >
->
-std::ostream& operator<<(std::ostream& os, const T& a) {
-    for(const auto &it: a)
-        os << it << " ";
-    return os;
-}
-
+//template <typename T, typename = std::enable_if_t <
+//        !std::is_same<
+//                typename std::iterator_traits<typename T::const_iterator>::value_type,
+//                void>::value
+//    &&
+//        !std::is_base_of<std::string, std::decay_t<T>>::value
+//    >
+//>
+//std::ostream& operator<<(std::ostream& os, const T& a) {
+//    for(const auto &it: a)
+//        os << it << " ";
+//    return os;
+//}
+//
 
 void test() {
 
@@ -150,7 +150,6 @@ long zeros(long n) {
 }
 
 bool isPrime(int num) {
-    printf("~d~n", num);
     if (num <= 0) return false;
     if (num == 1) return false;
     for (int i = 2; i <= sqrt(num); ++i) {
@@ -161,7 +160,7 @@ bool isPrime(int num) {
 
 std::string pigIt2(const std::string &str) {
     std::regex reg{"(\\w)(\\w*)(\\s|$)"};
-    return regex_replace(str, reg, "$2$1ay$3");
+    return std::regex_replace(str, reg, "$2$1ay$3");
 }
 std::string pigIt(const std::string &str) {
     std::ostringstream ss_out;
@@ -221,7 +220,76 @@ std::vector<std::string> permutations(std::string s) {
     return std::vector<std::string>(d.begin(), d.end());
 }
 
+
+//Expected: equal to 8757893018872981178457201150120117898112199399708766596604838159031972384445317104775645041857013092826100600084089885620245218538962774875195534941616771797563893371
+//Actual:           08757893018872981178457201150120117898112199399708766596604838159031972384445317104775645041857013092826100600084089885620245218538962774875195534941616771797563893371
+std::string sumStrings(std::string a, std::string b) {
+    std::string &max = a.size() >= b.size() ? a : b;
+    std::string &min = a.size() < b.size() ? a : b;
+    std::string result;
+    int tmp = 0;
+
+    for(auto it_min = min.rbegin(), it_max = max.rbegin(); it_min != min.rend(); ++it_min, ++it_max) {
+        auto sum = *it_min + *it_max - 96 + tmp;
+        result.push_back(static_cast<char>(sum % 10 + 48));
+        tmp = sum / 10;
+    }
+
+    for(auto it_max = max.rbegin() + min.size(); it_max != max.rend(); ++it_max) {
+        auto sum = *it_max + tmp - 48;
+        result.push_back(static_cast<char>(sum % 10 + 48));
+        tmp = sum / 10;
+    }
+    if (tmp) result.push_back(static_cast<char>(tmp + 48));
+
+    while (*(result.end() - 1) == 48 && result.size() != 1) result.pop_back();
+
+    std::reverse(result.begin(), result.end());
+    return result;
+}
+
+std::string mult(const std::string &a, std::uint8_t b) {
+    std::string result;
+    std::uint8_t carry = 0;
+    if (!b || (a.size() == 1 && a[0] == '0')) return "0";
+    for(auto ch = a.crbegin(); ch != a.crend(); ++ch) {
+        auto sum = static_cast<std::uint8_t>((*ch - 48) * b + carry);
+        result.push_back(static_cast<char>((sum % 10) + 48));
+        carry = static_cast<std::uint8_t>(sum / 10);
+    }
+    if (carry) result.push_back(static_cast<char>(carry + 48));
+    return std::move(result);
+}
+
+std::string sum(std::string a, std::string b) {
+    auto max = a.size() >= b.size() ? a.size() : b.size();
+    auto it_a = a.cbegin(), it_b = b.cbegin();
+    std::string result;
+    int carry = 0;
+    for (auto i = 0; i < max; ++i) {
+        auto _a = i < max ? *it_a++ : 0;
+        auto _b = i < max ? *it_b++ : 0;
+        auto sum = _a + _b - 96 + carry;
+        result.push_back(static_cast<char>((sum % 10) + 48));
+        carry = sum / 10;
+    }
+    if (carry) result.push_back(static_cast<char>(carry));
+    return std::move(result);
+}
+
+std::string multiplication(std::string a, std::string b) {
+    int i = 0;
+    std::string sum;
+    for (auto ch = b.crbegin(); ch != b.crend(); ++i, ++ch) {
+        sum = mult(a, static_cast<std::uint8_t>(*ch - 48));
+    }
+}
+
 int main() {
+    auto y = multiplication("25", "25");
+
+    auto y1 = sum("52", "52");
+
     int x = duplicateCount("aabbcde");
 
     auto gf = sqInRect(5, 3);
@@ -242,27 +310,12 @@ int main() {
 
     auto d5 = permutations("");
 
-
+    auto d6 = sumStrings("0","0");
 
     valid_braces("[({})](]");
 
     std::array<std::int32_t, 10> in{5,2,15,93,4,65,1,47,11,31};
 
-    std::vector<bool> vb{true,false,true,false};
-    std::cout << vb << std::endl;
-
-    std::cout << in << std::endl;
-    for (auto it = in.begin() + 1; it != in.end(); ++it) {
-        auto x = *it;
-        auto j = it;
-        while (--j >= in.begin() && *j > x)
-            *(j + 1) = *j;
-        *(j + 1) = x;
-    }
-    std::string str{"Hello, World 2!"};
-    std::cout << in << std::endl;
-    std::cout << str << std::endl;
-    std::cout << "Hello, World!" << std::endl;
     return 0;
 }
 
