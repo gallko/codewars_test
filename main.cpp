@@ -258,37 +258,67 @@ std::string mult(const std::string &a, std::uint8_t b) {
         carry = static_cast<std::uint8_t>(sum / 10);
     }
     if (carry) result.push_back(static_cast<char>(carry + 48));
+    std::reverse(result.begin(), result.end());
     return std::move(result);
 }
 
-std::string sum(std::string a, std::string b) {
+std::string sum(const std::string &a, const std::string &b) {
     auto max = a.size() >= b.size() ? a.size() : b.size();
-    auto it_a = a.cbegin(), it_b = b.cbegin();
+    auto it_a = a.crbegin(), it_b = b.crbegin();
     std::string result;
     int carry = 0;
     for (auto i = 0; i < max; ++i) {
-        auto _a = i < max ? *it_a++ : 0;
-        auto _b = i < max ? *it_b++ : 0;
+        auto _a = i < a.size() ? *it_a++ : 48;
+        auto _b = i < b.size() ? *it_b++ : 48;
         auto sum = _a + _b - 96 + carry;
         result.push_back(static_cast<char>((sum % 10) + 48));
         carry = sum / 10;
     }
-    if (carry) result.push_back(static_cast<char>(carry));
+    if (carry) result.push_back(static_cast<char>(carry + 48));
+    std::reverse(result.begin(), result.end());
     return std::move(result);
 }
 
-std::string multiplication(std::string a, std::string b) {
+std::string multiplication(const std::string &a, const std::string &b) {
     int i = 0;
-    std::string sum;
+    std::string result("0"), tmp;
     for (auto ch = b.crbegin(); ch != b.crend(); ++i, ++ch) {
-        sum = mult(a, static_cast<std::uint8_t>(*ch - 48));
+        tmp = mult(a, static_cast<std::uint8_t>(*ch - 48)) + std::string(i, '0');
+        result = sum(result, tmp);
     }
+    return std::move(result);
+}
+
+std::string factorial(int factorial) {
+    if (factorial < 0) return "";
+    std::string result("1");
+    for(auto i = 1; i <= factorial; ++i) {
+        result = multiplication(result, std::to_string(i));
+    }
+    return std::move(result);
+}
+
+std::string factorial2(int factorial){
+    std::vector<int> r = {1};
+    int c = 0;
+    for(int i = 1; i <= factorial; i++) {
+        for(auto& d : r) {
+            int v = d*i + c;
+            d = v%10;
+            c = v/10;
+        }
+        for(;c > 0; c /= 10)
+            r.push_back(c%10);
+    }
+    std::stringstream s;
+    std::copy(std::rbegin(r), std::rend(r), std::ostream_iterator<int>(s));
+    return s.str();
 }
 
 int main() {
-    auto y = multiplication("25", "25");
 
-    auto y1 = sum("52", "52");
+
+    auto y = factorial2(5);
 
     int x = duplicateCount("aabbcde");
 
