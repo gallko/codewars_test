@@ -8,6 +8,7 @@
 #include <cmath>
 #include <set>
 #include <unordered_set>
+#include "TreeNode.h"
 
 template <typename T>
 class Q;
@@ -315,8 +316,45 @@ std::string factorial2(int factorial){
     return s.str();
 }
 
-int main() {
+TreeNode *arrayToTree(const std::vector<int> &arr) {
+    if (arr.empty()) return nullptr;
+    int h = 0, count = 0;
+    auto top_node = new TreeNode(*arr.begin());
+    TreeNode *cur_node = top_node;
 
+    for(auto it = arr.cbegin() + 1; it != arr.cend(); ++it) {
+        auto *node = new TreeNode(*it);
+        if(count) {
+            int i = h;
+            while (cur_node->get_right() && cur_node->get_right()) {
+                if (cur_node == top_node) {
+                    top_node->get_right();
+                    --i;
+                } else {
+                    cur_node->get_parent();
+                    ++i;
+                }
+            }
+        } else {
+            // no places at layer
+            cur_node = top_node;
+            while (cur_node->get_left()) {
+                cur_node = cur_node->get_left();
+            }
+            ++h;
+            count = static_cast<int>(std::pow(2, h));
+        }
+        if (!cur_node->set_left(node))
+            cur_node->set_right(node);
+        --count;
+    }
+    return top_node;
+}
+
+int main() {
+    TreeNode *node = arrayToTree({17, 0, -4, 3, 15});
+
+    delete node;
 
     auto y = factorial2(5);
 

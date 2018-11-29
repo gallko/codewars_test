@@ -3,4 +3,4 @@ project(pthreads)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(pthreads main.cpp)
+add_executable(pthreads main.cpp TreeNode.cpp TreeNode.h)
