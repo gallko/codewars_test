@@ -390,10 +390,66 @@ std::string LCS(const std::string x, const std::string y) {
     return matrix[max_str.size()][min_str.size()];
 }
 
+bool validSolution(unsigned int board[9][9]){
+    std::vector<int> s{0,0,0};
+    for (int i = 0; i < 9; ++i) {
+        int sum1 = 0, sum2 = 0;
+        for (int j = 0; j < 9; ++j) {
+            sum1 += board[i][j];
+            sum2 += board[j][i];
+            s[j/3] += board[i][j];
+        }
+        if (sum1 != 45) return false;
+        if (sum2 != 45) return false;
+        if ((i+1) % 3 == 0) {
+            if (s != std::vector<int>{45,45,45})
+                return false;
+            s = {0,0,0};
+        }
+    }
+    return true;
+}
+
+unsigned int example3[9][9] = {{1, 2, 3, 4, 5, 6, 7, 8, 9},
+                               {2, 3, 1, 5, 6, 4, 8, 9, 7},
+                               {3, 1, 2, 6, 4, 5, 9, 7, 8},
+                               {4, 5, 6, 7, 8, 9, 1, 2, 3},
+                               {5, 6, 4, 8, 9, 7, 2, 3, 1},
+                               {6, 4, 5, 9, 7, 8, 3, 1, 2},
+                               {7, 8, 9, 1, 2, 3, 4, 5, 6},
+                               {8, 9, 7, 2, 3, 1, 5, 6, 4},
+                               {9, 7, 8, 3, 1, 2, 6, 4, 5}};
+unsigned int example1[9][9] = {{5, 3, 4, 6, 7, 8, 9, 1, 2},
+                               {6, 7, 2, 1, 9, 5, 3, 4, 8},
+                               {1, 9, 8, 3, 4, 2, 5, 6, 7},
+                               {8, 5, 9, 7, 6, 1, 4, 2, 3},
+                               {4, 2, 6, 8, 5, 3, 7, 9, 1},
+                               {7, 1, 3, 9, 2, 4, 8, 5, 6},
+                               {9, 6, 1, 5, 3, 7, 2, 8, 4},
+                               {2, 8, 7, 4, 1, 9, 6, 3, 5},
+                               {3, 4, 5, 2, 8, 6, 1, 7, 9}};
+
+unsigned int example2[9][9] = {{5, 3, 4, 6, 7, 8, 9, 1, 2},
+                               {6, 7, 2, 1, 9, 0, 3, 4, 8},
+                               {1, 0, 0, 3, 4, 2, 5, 6, 0},
+                               {8, 5, 9, 7, 6, 1, 0, 2, 0},
+                               {4, 2, 6, 8, 5, 3, 7, 9, 1},
+                               {7, 1, 3, 9, 2, 4, 8, 5, 6},
+                               {9, 0, 1, 5, 3, 7, 2, 1, 4},
+                               {2, 8, 7, 4, 1, 9, 6, 3, 5},
+                               {3, 0, 0, 4, 8, 1, 1, 7, 9}};
 
 
+long long determinant(std::vector< std::vector<long long> > m) {
+    // TODO: Return the determinant of the square matrix passed in
+    return 0;
+}
 
 int main() {
+
+    bool validS = validSolution(example3);
+    bool validS1 = validSolution(example1);
+
 // 12356
     auto re = LCS("abcdefghijklmnopq", "apcdefghijklmnobq");
 //    auto re = LCS1("nothardlythefinaltest", "zzzfinallyzzz");
