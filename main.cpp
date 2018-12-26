@@ -351,10 +351,52 @@ TreeNode *arrayToTree(const std::vector<int> &arr) {
     return top_node;
 }
 
-int main() {
-    TreeNode *node = arrayToTree({17, 0, -4, 3, 15});
 
-    delete node;
+std::string lcs(std::string &x, std::string &y, std::size_t xn, std::size_t yn) {
+    if (xn == x.size() || yn == y.size()) return "";
+    if (x[xn] == y[yn])
+        return  x[xn] + lcs(x, y, xn + 1, yn +1 );
+    else {
+        std::string X = lcs(x, y, xn + 1, yn);
+        std::string Y = lcs(x, y, xn, yn + 1);
+        return X.size() >= Y.size() ? X : Y;
+    }
+}
+
+std::string LCS1(std::string x, std::string y) {
+    return lcs(x,y, 0,0);
+}
+
+std::string LCS(const std::string x, const std::string y) {
+    using namespace std;
+    string acc;
+    vector<vector<string>> matrix;
+    const string &max_str = x.size() >= y.size() ? x : y;
+    const string &min_str = x.size() < y.size() ? x : y;
+
+    matrix.resize(max_str.size() + 1);
+    for (int i = 0; i <= max_str.size(); i++)
+        matrix[i].resize(min_str.size() + 1);
+
+    for(int i = 1; i < matrix.size(); i++) {
+        for(int j = 1; j < matrix[i].size(); j++) {
+            if (max_str[i-1] == min_str[j-1]) {
+                matrix[i][j] = matrix[i - 1][j - 1] + max_str[i - 1];
+                continue;
+            }
+            matrix[i][j] = (matrix[i - 1][j]).size() > (matrix[i][j - 1]).size() ? matrix[i - 1][j] : matrix[i][j - 1];
+        }
+    }
+    return matrix[max_str.size()][min_str.size()];
+}
+
+
+
+
+int main() {
+// 12356
+    auto re = LCS("abcdefghijklmnopq", "apcdefghijklmnobq");
+//    auto re = LCS1("nothardlythefinaltest", "zzzfinallyzzz");
 
     auto y = factorial2(5);
 
