@@ -503,14 +503,36 @@ std::string range_extraction(std::vector<int> args) {
     return str.str();
 }
 
+bool win_check(const vector<int> &projection) {
+    return false;
+}
+
+vector<int> projection(const vector<vector<int>> &moves) {
+    return {};
+}
+
+string playOX3D(const vector<vector<int>> &moves)
+{
+    using matrix = array<array<int,4>, 4>;
+    array<matrix, 3> prO{}, prX{};
+
+    return ""; // Do your magic!
+}
+
+
 int main() {
+
+    playOX3D({{0,0,0},
+              {1,1,1},
+              {2,2,2},
+              {3,3,3}});
+    exit(EXIT_SUCCESS);
 
     auto det = determinant(vector< vector<long long> > {
             vector<long long> {2, 5, 3},
             vector<long long> {1, -2, -1},
             vector<long long> {1, 3, 4}
     });
-    exit(EXIT_SUCCESS);
 
     auto range = range_extraction({-6});
     range = range_extraction({0, 1, 3, 4,5, 8,9});
