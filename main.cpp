@@ -441,9 +441,42 @@ unsigned int example2[9][9] = {{5, 3, 4, 6, 7, 8, 9, 1, 2},
                                {3, 0, 0, 4, 8, 1, 1, 7, 9}};
 
 
-long long determinant(std::vector< std::vector<long long> > m) {
+using namespace std;
+
+void print_m(const vector< vector<long long> > &m) {
+    for (auto i = 0; i < m.size(); ++i) {
+        for (auto j = 0; j < m.size(); ++j) {
+            cout << m[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+std::vector< std::vector<long long> > new_m(const vector< std::vector<long long> > &m, size_t skip) {
+    std::vector< std::vector<long long> > new_m(m.size() - 1);
+    for (auto i = 1, y = 0; i < m.size(); ++i, ++y) {
+        for (auto j = 0; j < m.size(); ++j) {
+            if (j == skip) continue;
+            new_m[y].push_back(m[i][j]);
+        }
+    }
+    return std::move(new_m);
+}
+
+long long det(vector< vector<long long> > &m) {
+    if (m.size() == 2) return m[0][0]*m[1][1] - m[1][0]*m[0][1];
+    long long sum = 0, t;
+    for (size_t i = 0; i < m.size(); ++i) {
+        auto tmp = new_m(m, i);
+        t = det(tmp);
+        sum += (m[0][i] * static_cast<long long>(pow(-1, i)) * t);
+    }
+    return sum;
+}
+
+long long determinant(vector< vector<long long> > m) {
     // TODO: Return the determinant of the square matrix passed in
-    return 0;
+    return det(m);
 }
 
 std::string range_extraction(std::vector<int> args) {
@@ -471,6 +504,13 @@ std::string range_extraction(std::vector<int> args) {
 }
 
 int main() {
+
+    auto det = determinant(vector< vector<long long> > {
+            vector<long long> {2, 5, 3},
+            vector<long long> {1, -2, -1},
+            vector<long long> {1, 3, 4}
+    });
+    exit(EXIT_SUCCESS);
 
     auto range = range_extraction({-6});
     range = range_extraction({0, 1, 3, 4,5, 8,9});
