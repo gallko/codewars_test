@@ -419,6 +419,7 @@ unsigned int example3[9][9] = {{1, 2, 3, 4, 5, 6, 7, 8, 9},
                                {7, 8, 9, 1, 2, 3, 4, 5, 6},
                                {8, 9, 7, 2, 3, 1, 5, 6, 4},
                                {9, 7, 8, 3, 1, 2, 6, 4, 5}};
+
 unsigned int example1[9][9] = {{5, 3, 4, 6, 7, 8, 9, 1, 2},
                                {6, 7, 2, 1, 9, 5, 3, 4, 8},
                                {1, 9, 8, 3, 4, 2, 5, 6, 7},
@@ -445,7 +446,37 @@ long long determinant(std::vector< std::vector<long long> > m) {
     return 0;
 }
 
+std::string range_extraction(std::vector<int> args) {
+    if (args.empty()) return "";
+    int start_range = *args.cbegin();
+    int end_range = *args.cbegin();
+    std::stringstream str;
+    str << start_range;
+
+    for(auto it = args.cbegin() + 1; it != args.cend(); ++it) {
+        if (*it == end_range + 1) {
+            ++end_range;
+            continue;
+        }
+        if (start_range == end_range)
+            str << "," << *it;
+        else
+            str << (start_range + 1 == end_range ? "," : "-") << end_range << "," << *it;
+        start_range = end_range = *it;
+    }
+    if (start_range != end_range)
+        str << (start_range + 1 == end_range ? "," : "-") << end_range;
+
+    return str.str();
+}
+
 int main() {
+
+    auto range = range_extraction({-6});
+    range = range_extraction({0, 1, 3, 4,5, 8,9});
+    range = range_extraction({-6,-3,-2,-1,0,1,3,4,5,7,8,9,10,11,14,15,17,18,19,20});
+    range = range_extraction({-3,-2,-1,2,10,15,16,18,19,20});
+    range = range_extraction({-6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20});
 
     bool validS = validSolution(example3);
     bool validS1 = validSolution(example1);
